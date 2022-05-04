@@ -1,0 +1,25 @@
+regex for JSON {...}
+escapes "{"
+escapes "\"{"
+(?'bracket'\{((?>(?:"(?:\\.|.)*?"|[^{}])+|(?P>bracket))*)\})(.*)$
+
+
+first write it recursive
+then write it linear, it's the same logic to be true
+
+the first thing you see is : [ or {
+so the FIRST thing you do is branch out
+if branch out, then so be it,
+the value branch out stage: I'll branch out [, {, ", \d, t|f, n
+
+objects, arrays, numbers, strings, booleans, and null
+
+trailing commas are forbidden.
+we need to support trailing comma or else it's gonna break for vscode settings.json
+
+we like to cheat, we like to cheat, use regex, use regex
+shame on those who say regex is bad, regex is beauty
+
+I have met regex recursion, PCRE2 conditional replace,
+
+
