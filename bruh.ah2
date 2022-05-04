@@ -13,15 +13,17 @@ JSON_parse(str) {
     return JSON_value()
 
     JSON_value() {
-        obj_:=Map()
 
-        Switch SubStr(str, c_, 1) {
+        char_:=SubStr(str, c_, 1)
+        Switch char_ {
             case "{":
+                obj_:=Map()
                 ;object
                 c_++
                 loop {
                     skip_s()
                     if (SubStr(str, c_, 1) == "}") {
+                        c_++
                         return obj_
                     }
 
@@ -48,11 +50,47 @@ JSON_parse(str) {
                         c_++, skip_s()
                     }
                 }
+            case "[":
+                arr_:=[]
+                ;array
+                c_++
+                loop {
+                    skip_s()
+                    if (SubStr(str, c_, 1) == "]") {
+                        c_++
+                        return arr_
+                    }
+
+                    value_:=JSON_value()
+                    arr_.Push(value_)
+
+                    skip_s()
+                    char_:=SubStr(str, c_, 1)
+                    if (char_ == ",") {
+                        c_++, skip_s()
+                    }
+                }
             case "`"":
                 RegExMatch(str, "(?:\\.|.)*?(?=`")", &OutputVar, c_ + 1)
                 unquoted:=RegExReplace(OutputVar.0, "\\(.)", "$1")
                 c_+=OutputVar.Len + 2
                 return unquoted
+            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
+                RegExMatch(str, "[0-9.]*", &OutputVar, c_)
+                c_+=OutputVar.Len
+                return Number(OutputVar.0)
+            case "t":
+                ;"true"
+                c_+=4
+                return {a:1}
+            case "f":
+                ;"false"
+                c_+=5
+                return {a:0}
+            case "n":
+                ;"null"
+                c_+=4
+                return {a:-1}
 
 
         }
@@ -66,7 +104,9 @@ JSON_parse(str) {
 
 ; d JSON_parse("{`na:`"b`"}")
 ; d JSON_parse("{`n`"a`":`"b`"}")
-d JSON_parse("{`na:`"b`",`"c`":`"\`"}d`"}")
+; d JSON_parse("{`na:`"b`",`"c`":`"\`"}d`"}")
+; d JSON_parse("[{`na:`"b`",`"c`":`"\`"}d`"}, {`na: true,`"c`": null},{a:0,b:1,c:314}]")
+d JSON_parse(FileRead("AutoHotkey_L releases.json"))
 
 return
 
