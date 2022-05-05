@@ -13,3 +13,9 @@ so JSON properties are defined Twice
 obj_[key_]:=value_
 obj_.DefineProp(key_, {Value: value_})
 ```
+
+```autohotkey
+MsgBox JSON_parse(FileRead("AutoHotkey_L releases.json"))[1]["assets"][1]["browser_download_url"]
+MsgBox JSON_parse(FileRead("AutoHotkey_L releases.json"))[1].assets[1].browser_download_url
+```
+both work
