@@ -77,7 +77,11 @@ JSON_parse(str) {
                 c_+=OutputVar.Len + 2
                 return unquoted
             case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-                RegExMatch(str, "[0-9.]*", &OutputVar, c_)
+                ; -100
+                ; 100.0
+                ; 1.0E+2
+                ; 1E-2
+                RegExMatch(str, "[0-9.eE\-+]*", &OutputVar, c_)
                 c_+=OutputVar.Len
                 return Number(OutputVar.0)
             case "t":
