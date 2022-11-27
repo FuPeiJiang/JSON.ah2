@@ -46,7 +46,7 @@ JSON_parse(str) {
                     ; a or "a"
                     if (SubStr(str, c_, 1) == """") {
                         RegExMatch(str, "(?:\\.|.)*?(?="")", OutputVar, c_ + 1)
-                        objectStack.Push(RegExReplace(OutputVar, "\\(.)", "$1"))
+                        objectStack.Push(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(OutputVar, "\""", """", true), "\f", "`f", true), "\r", "`r", true), "\n", "`n", true), "\b", "`b", true), "\t", "`t", true), "\\", "\", true))
                         c_+=StrLen(OutputVar)
                     } else {
                         RegExMatch(str, ".*?(?=[\s:])", OutputVar, c_)
@@ -80,7 +80,7 @@ JSON_parse(str) {
 
                         case """":
                             RegExMatch(str, "(?:\\.|.)*?(?="")", OutputVar, c_ + 1)
-                            unquoted:=RegExReplace(OutputVar, "\\(.)", "$1")
+                            unquoted:=StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(StrReplace(OutputVar, "\""", """", true), "\f", "`f", true), "\r", "`r", true), "\n", "`n", true), "\b", "`b", true), "\t", "`t", true), "\\", "\", true)
                             c_+=StrLen(OutputVar) + 2
                             current:=unquoted
                         case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
@@ -149,8 +149,9 @@ JSON_parse(str) {
 ; d(JSON_parse("{`na:""b"",""c"":""\""}d""}"))
 ; d(JSON_parse("[{`na:""b"",""c"":""\""}d""}, {`na: true,""c"": null},{a:0,b:1,c:314}]"))
 ; d(JSON_parse(FileRead("AutoHotkey_L releases.json"))[1].assets[1].browser_download_url)
-MsgBox % JSON_parse(FileRead("AutoHotkey_L releases.json"))[1]["assets"][1]["browser_download_url"]
-MsgBox % JSON_parse(FileRead("AutoHotkey_L releases.json"))[1].assets[1].browser_download_url
+MsgBox % Clipboard:=JSON_parse("""\\\t\\""")
+; MsgBox % JSON_parse(FileRead("AutoHotkey_L releases.json"))[1]["assets"][1]["browser_download_url"]
+; MsgBox % JSON_parse(FileRead("AutoHotkey_L releases.json"))[1].assets[1].browser_download_url
 
 return
 
